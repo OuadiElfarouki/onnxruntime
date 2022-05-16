@@ -47,7 +47,7 @@ elseif(is_dpcpp)
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -sycl-std=2020 -D__SYCL_DISABLE_NAMESPACE_INLINE__=ON -O3 -Xclang -cl-mad-enable")
 
-  set(DPCPP_SYCL_TARGET spir64-unknown-unknown-sycldevice)
+  set(DPCPP_SYCL_TARGET amdgcn-amd-amdhsa)
 
   find_package(DPCPP REQUIRED)
   get_target_property(SYCL_INCLUDE_DIRS DPCPP::DPCPP INTERFACE_INCLUDE_DIRECTORIES)

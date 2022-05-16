@@ -33,13 +33,13 @@ add_library(DPCPP::DPCPP INTERFACE IMPORTED)
 
 if(UNIX)
   set_target_properties(DPCPP::DPCPP PROPERTIES
-    INTERFACE_COMPILE_OPTIONS "-fsycl;-fsycl-targets=${DPCPP_SYCL_TARGET}"
-    INTERFACE_LINK_OPTIONS "-fsycl;-fsycl-targets=${DPCPP_SYCL_TARGET}"
+    INTERFACE_COMPILE_OPTIONS  $<$<COMPILE_LANGUAGE:CXX>:-fsycl> $<$<COMPILE_LANGUAGE:CXX>:-fsycl-targets=${DPCPP_SYCL_TARGET} -Xsycl-target-backend --offload-arch=gfx908>
+    INTERFACE_LINK_OPTIONS  $<$<COMPILE_LANGUAGE:CXX>:-fsycl> $<$<COMPILE_LANGUAGE:CXX>:-fsycl-targets=${DPCPP_SYCL_TARGET}>
     INTERFACE_LINK_LIBRARIES ${DPCPP_LIB_DIR}
     INTERFACE_INCLUDE_DIRECTORIES "${DPCPP_BIN_DIR}/../include/sycl")
 else()
   set_target_properties(DPCPP::DPCPP PROPERTIES
-    INTERFACE_COMPILE_OPTIONS "-fsycl;-fsycl-targets=${DPCPP_SYCL_TARGET}"
+    INTERFACE_COMPILE_OPTIONS  $<$<COMPILE_LANGUAGE:CXX>:-fsycl> $<$<COMPILE_LANGUAGE:CXX>:-fsycl-targets=${DPCPP_SYCL_TARGET} -Xsycl-target-backend --offload-arch=gfx908>
     INTERFACE_LINK_LIBRARIES ${DPCPP_LIB_DIR}
     INTERFACE_INCLUDE_DIRECTORIES "${DPCPP_BIN_DIR}/../include/sycl")
 endif()
@@ -54,11 +54,11 @@ function(add_sycl_to_target)
     "${multi_value_args}"
     ${ARGN}
   )
-  target_compile_options(${SB_ADD_SYCL_TARGET} PUBLIC -fsycl
-                          PUBLIC -fsycl-targets=${DPCPP_SYCL_TARGET})
+  target_compile_options(${SB_ADD_SYCL_TARGET} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fsycl>
+                          PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fsycl-targets=${DPCPP_SYCL_TARGET} -Xsycl-target-backend --offload-arch=gfx908>)
   get_target_property(target_type ${SB_ADD_SYCL_TARGET} TYPE)
   if (NOT target_type STREQUAL "OBJECT_LIBRARY")
-    target_link_options(${SB_ADD_SYCL_TARGET} PUBLIC -fsycl
-                        PUBLIC -fsycl-targets=${DPCPP_SYCL_TARGET})
+    target_link_options(${SB_ADD_SYCL_TARGET} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fsycl>
+                        PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fsycl-targets=${DPCPP_SYCL_TARGET} -Xsycl-target-backend --offload-arch=gfx908>)
   endif()                             
 endfunction()
